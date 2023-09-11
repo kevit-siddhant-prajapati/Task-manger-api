@@ -15,7 +15,7 @@ getDetails = async () => {
       // create a document
       const me = new User({
         name : 'Siddhant',
-        age : 20
+        age : '20'
         }
       );
       try {
