@@ -17,10 +17,10 @@ getData = async () =>  {
             throw Error('Connection not stablish with database')
          }
          let db = result.db(databaseName)
-         let collection = db.collection('user')
+         let collection = db.collection('tasks')
          
-         collection.deleteMany({
-            name : 'Ajay'
+         collection.deleteOne({
+            description : 'Javascript'
          }).then((result) => console.log(result))
          .catch((err) => console.log('Unable to delete result'+err))
    }  
