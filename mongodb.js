@@ -17,19 +17,17 @@ getData = async () =>  {
             throw Error('Connection not stablish with database')
          }
          let db = result.db(databaseName)
-         let collection = db.collection('tasks')
-         let response = await collection.findOne({_id : new ObjectID('64fe9aa55a5aea0f52da4824')})
-         let response1 = await collection.find({completed : false}).toArray()
-         if(!response){
-            throw Error('Unable to fetch')
-         }
-         console.log(response)
-
-         if(!response1){
-            throw Error('Unable to fetch')
-         }
-         console.log(response1)
-      
+         let collection = db.collection('user')
+         
+         collection.updateOne({
+            _id : new ObjectID('64f857c437407833fdf31c03')
+         }, {
+            $set : {
+               name : 'Ramesh',
+               age : 24
+            }
+         }).then((result) => console.log(result))
+         .catch((err) => console.log('Unable to upadate result'+err))
    }  
    catch(err){
       console.log(err)
