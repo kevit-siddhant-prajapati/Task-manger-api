@@ -35,7 +35,6 @@ getData = async () =>  {
       console.log(err)
    }
    
-   
 }
 
 
