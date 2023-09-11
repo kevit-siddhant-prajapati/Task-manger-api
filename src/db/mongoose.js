@@ -1,25 +1,26 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const { boolean } = require('yargs');
 
 getDetails = async () => {
     await mongoose.connect('mongodb://localhost:27017/task-manager-api')
     const Schema = mongoose.Schema;
     
-    const userSchema = new Schema({
-        name : String,
-        age : Number
+    const taskSchema = new Schema({
+        description : String,
+        completed : Boolean
       });
       
       // compile our model
-      const User = mongoose.model('User', userSchema);
+      const Tasks = mongoose.model('Tasks', taskSchema);
       
       // create a document
-      const me = new User({
-        name : 'Siddhant',
-        age : '20'
+      const task = new Tasks({
+        description : 'Javascript work',
+        completed : false
         }
       );
       try {
-        const response = await me.save();
+        const response = await task.save();
         console.log(response)
       }catch(err){
         console.log(err)
