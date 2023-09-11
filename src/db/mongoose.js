@@ -21,21 +21,33 @@ getDetailUsers = async () => {
         },
         age : {
             type : Number,
+            default : 0,
             validate(value) {
                 if(value < 0){
                     throw new Error('Age must be a positive Number')
+                }
+            }
+        },
+        password : {
+            type : String,
+            require : true,
+            minlength : 7,
+            validate(value){
+                value = value.trim()
+                if(value.toLowerCase() == 'password'){
+                    throw new Error('Password must not contain string "password"')
                 }
             }
         }
       });
 
       const User = mongoose.model('User', userSchema);
-      
       // create a document
       const me = new User({
             name : 'Raman',
             age : 22,
-            email : 'raj124@gmail.'
+            email : 'raj124@gmail.abc',
+            password : 'password'
         }
       );
       try {
@@ -44,12 +56,10 @@ getDetailUsers = async () => {
       }catch(err){
         console.log(err)
       }
-
       const taskSchema = new Schema({
         description : String,
         completed : Boolean
       })
-
       // compile our model
       const Tasks = mongoose.model('Tasks', taskSchema);
       

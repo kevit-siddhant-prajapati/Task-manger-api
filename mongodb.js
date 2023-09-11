@@ -5,7 +5,7 @@ const MongoClient = mongodb.MongoClient
 const ObjectID = mongodb.ObjectId
 
 const connectionURL = 'mongodb://127.0.0.1:27017'
-const databaseName = 'task-manager'
+const databaseName = 'task-manager-api'
 
 const id = new ObjectID()
 // console.log(id.toString())
@@ -19,8 +19,8 @@ getData = async () =>  {
          let db = result.db(databaseName)
          let collection = db.collection('tasks')
          
-         collection.deleteOne({
-            description : 'Javascript'
+         collection.deleteMany({
+            name : 'Raj'
          }).then((result) => console.log(result))
          .catch((err) => console.log('Unable to delete result'+err))
    }  
