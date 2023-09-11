@@ -17,13 +17,13 @@ getData = async () =>  {
             throw Error('Connection not stablish with database')
          }
          let db = result.db(databaseName)
-         let collection = db.collection('user')
+         let collection = db.collection('tasks')
          
-         collection.updateOne({
-            _id : new ObjectID('64f857c437407833fdf31c03')
+         collection.updateMany({
+            completed : false
          }, {
-            $inc : {
-               age : 2
+            $set : {
+               completed : true
             }
          }).then((result) => console.log(result))
          .catch((err) => console.log('Unable to upadate result'+err))
