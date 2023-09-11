@@ -22,9 +22,8 @@ getData = async () =>  {
          collection.updateOne({
             _id : new ObjectID('64f857c437407833fdf31c03')
          }, {
-            $set : {
-               name : 'Ramesh',
-               age : 24
+            $inc : {
+               age : 2
             }
          }).then((result) => console.log(result))
          .catch((err) => console.log('Unable to upadate result'+err))
