@@ -1,7 +1,7 @@
 const express = require('express')
-const mongoose = require('mongoose');
 const router = express.Router()
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 
 
 router.post('/users', async (req,res)=> {
@@ -26,12 +26,15 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
-router.get('/users', async (req, res) => {
-    await User.find({}).then((users) => {
+router.get('/users', auth ,async (req, res) => {
+    try{
+        const users = await User.find({})
         res.send(users)
-    }).catch((err) => {
-        res.status(500).send(err)
-    })
+    }catch(e){
+        res.status(500).send()
+    }
+    
+    
 })
 
 router.get('/users/:id', async (req, res) => {
