@@ -1,8 +1,8 @@
 const express = require('express')
 const mongoose = require('mongoose');
 const router = express.Router()
-const taskSchema = require('../models/task')
-const Task = mongoose.model('Task', taskSchema)
+const Task = require('../models/task')
+
 
 router.post('/tasks', async (req, res) => {
     const task = new Task(req.body)

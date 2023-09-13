@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { boolean } = require('yargs');
 const validator = require('validator')
+const bcrypt = require('bcrypt')
 
 const Schema = mongoose.Schema;
     const userSchema = new Schema({
@@ -39,4 +40,13 @@ const Schema = mongoose.Schema;
         }
       });
 
-    module.exports = userSchema;
+      userSchema.pre('save', async function (next) {
+        const user = this
+        if (user.isModified('password')){
+            user.password = await bcrypt.hash(user.password, 8)
+        }
+        next()
+      })
+
+      const User = mongoose.model('User', userSchema)
+    module.exports = User;
