@@ -11,5 +11,12 @@ const taskSchema = new Schema({
         default : false
     }
   })
+
+taskSchema.pre('save', async function(next) {
+    const task = this
+    console.log('before task is saving!')
+    next()
+})
+
   const Task = mongoose.model('Task', taskSchema)
   module.exports = Task;
