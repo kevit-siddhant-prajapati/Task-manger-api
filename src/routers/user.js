@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
 const auth = require('../middleware/auth')
-
+const mongoose = require('mongoose');
+const Task = require('../models/task')
 
 router.post('/users', async (req,res)=> {
     const user = new User(req.body)
@@ -44,8 +45,6 @@ router.post('/users/logout', auth, async (req, res) => {
         req.user.tokens = req.user.tokens.filter((token) => {
             return token.token !== req.token
         })
-        console.log(req.user.tokens)
-        console.log(req.body)
         await req.user.save()
         res.send()
     } catch (e) {
@@ -104,16 +103,12 @@ router.patch('/users/me',auth, async (req, res) => {
 
 router.delete('/users/me', auth, async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.user._id)
+        const user = await User.findById(req.user._id)
         if(!user){
             return res.status(404).send('User not found')
         }
-        // console.log(req.user._id.toString())
-        // const removeUser = await req.user.remove()
-        // console.log(removeUser)
-        // if(!removeUser){
-        //     throw Error('User not able to remove')
-        // }
+        await Task.deleteMany({ owner : user._id })
+        await User.deleteOne({name : user.name})
         res.send(req.user)
     }catch(e){
         res.status(500).send(e)

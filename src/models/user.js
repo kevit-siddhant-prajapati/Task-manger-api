@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const Task = require('./task')
 
 const Schema = mongoose.Schema;
     const userSchema = new Schema({
@@ -89,7 +90,7 @@ const Schema = mongoose.Schema;
         }
         return user
       }
-//Hash the plain text password before saving
+    //Hash the plain text password before saving
       userSchema.pre('save', async function (next) {
         const user = this
         
@@ -98,6 +99,7 @@ const Schema = mongoose.Schema;
         }
         next()
       })
+
 
       const User = mongoose.model('User', userSchema)
     module.exports = User;
