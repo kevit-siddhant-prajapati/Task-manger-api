@@ -10,7 +10,8 @@ router.post('/users', async (req,res)=> {
     try {
         const response1 = await user.save();
         const token = await user.generateAuthToken()
-        res.status(201).send({response1, token})
+        
+        res.status(201).send({ response1  , token})
       }catch(err){
         res.status(400)
         res.send(err)
@@ -108,7 +109,7 @@ router.delete('/users/me', auth, async (req, res) => {
             return res.status(404).send('User not found')
         }
         await Task.deleteMany({ owner : user._id })
-        await User.deleteOne({name : user.name})
+        await User.deleteOne({name : user._id})
         res.send(req.user)
     }catch(e){
         res.status(500).send(e)
