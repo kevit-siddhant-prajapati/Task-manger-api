@@ -4,21 +4,21 @@ const User = require('../models/user')
 const auth = async (req, res, next) => {
     try {
         const token = req.header('Authorization')
-        console.log(token)
+        const tokenarr = token.split(' ')
         
-        const decoded = jwt.verify(token, 'thisismynewcourse')
-        console.log(decoded)
+        const decoded = jwt.verify(tokenarr[1], 'thisismynewcourse')
         if(!decoded){
             throw Error('do not verify token')
         }
-        const user = await User.findOne({_id : decoded._id, 'tokens.token':token})
+        const user = await User.findOne({_id : decoded._id, 'tokens.token':tokenarr[1]})
         if(!user){
-            throw new Error()
+            throw new Error('User not found')
         }
+        req.token = tokenarr[1]
         req.user = user
         next()
     } catch (e){
-        res.status(401).send({error : "please authenticate"})
+         res.status(401).send({error : 'Please Authenticate'})
     }
 }
 
