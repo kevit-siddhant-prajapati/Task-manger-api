@@ -1,11 +1,15 @@
 const express = require('express')
 const mongoose = require('mongoose');
 const router = express.Router()
+const auth = require('../middleware/auth')
 const Task = require('../models/task')
 
 
-router.post('/tasks', async (req, res) => {
-    const task = new Task(req.body)
+router.post('/tasks', auth, async (req, res) => {
+    const task = new Task({
+        ...req.body,
+        owner : req.user._id
+    })
     try {
         const response = await task.save();
         res.status(201).send(response)

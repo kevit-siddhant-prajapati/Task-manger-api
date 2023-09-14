@@ -46,7 +46,18 @@ const Schema = mongoose.Schema;
                 required : true
             }
         }]
+      },{
+        toJSON : {
+            virtuals : true,
+            timestamps : true
+        }
       });
+
+      userSchema.virtual('tasks', {
+        ref : 'Task',
+        localField : '_id',
+        foreignField : 'owner'
+      })
 
       userSchema.methods.getPublicProfile = function (){
         const user = this
