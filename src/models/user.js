@@ -48,10 +48,7 @@ const Schema = mongoose.Schema;
             }
         }]
       },{
-        toJSON : {
-            virtuals : true,
-            timestamps : true
-        }
+        timestamps :true
       });
 
       userSchema.virtual('tasks', {

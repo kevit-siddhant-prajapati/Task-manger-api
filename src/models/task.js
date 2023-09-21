@@ -16,10 +16,7 @@ const taskSchema = new Schema({
         ref : 'User'
     }
   },{
-    toJSON : {
-        virtuals : true,
-        timestamps : true
-    }
+    timestamps :true
   })
 
 taskSchema.pre('save', async function(next) {
