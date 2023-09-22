@@ -7,7 +7,16 @@ const Task = require('../models/task')
 
 const multer = require('multer')
 const upload = multer({
-    dest : 'avatars'
+    dest : 'avatars',
+    limits : {
+        fileSize :1000000
+    },
+    fileFilter(req, file, cb){
+        if(!file.originalname.match(/\.(png|jpg|jpeg)$/)){
+            return cb(new Error('Only images allowed .'))
+        }
+        cb(undefined, true);
+    }
 })
 
 router.post('/users', async (req,res)=> {
@@ -97,7 +106,6 @@ router.patch('/users/me',auth, async (req, res) => {
             req.user[update] = req.body[update]
         })
         await req.user.save()
-        //const user=await User.findByIdAndUpdate(req.params.id , req.body, {new: true, runValidators: true})
         if(!req.user){
             return res.status(404).send('This type of user not found')
         }
@@ -123,6 +131,8 @@ router.delete('/users/me', auth, async (req, res) => {
 
 router.post('/users/me/avatar', upload.single('avatar'), (req,res) => {
     res.send()
+},(error, req, res,next)=> {
+    res.status(400).send({error : error.message})
 })
 
 
