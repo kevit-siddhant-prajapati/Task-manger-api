@@ -2,9 +2,9 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
 const auth = require('../middleware/auth')
-const mongoose = require('mongoose');
 const Task = require('../models/task')
-
+const sharp = require('sharp')
+const {sendWelcomeEmail, sendGoodbyeEmail} = require('../emails/account')
 const multer = require('multer')
 const upload = multer({
     limits : {
@@ -22,6 +22,7 @@ router.post('/users', async (req,res)=> {
     const user = new User(req.body)
     try {
         const response1 = await user.save();
+        sendWelcomeEmail(user.email, user.name)
         const token = await user.generateAuthToken()
         
         res.status(201).send({ response1  , token})
@@ -46,12 +47,16 @@ router.post('/users/login', async (req, res) => {
 
 router.get('/users', auth ,async (req, res) => {
     try{
-        const users = await User.find({})
-        res.send(users)
+        //const users = await User.find({})
+        res.send(req.user.getPublicProfile())
     }catch(e){
         res.status(500).send()
     }
     
+})
+
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user.getPublicProfile())
 })
 
 router.post('/users/logout', auth, async (req, res) => {
@@ -76,9 +81,7 @@ router.post('/users/logoutAll', auth, async(req, res)=> {
     }
 })
 
-router.get('/users/me', auth, async (req, res) => {
-    res.send(req.user.getPublicProfile())
-})
+
 
 router.get('/users/:id', async (req, res) => {
     const _id = req.params.id
@@ -117,6 +120,7 @@ router.patch('/users/me',auth, async (req, res) => {
 router.delete('/users/me', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user._id)
+        sendGoodbyeEmail(user.email, user.name)
         if(!user){
             return res.status(404).send('User not found')
         }
@@ -129,9 +133,8 @@ router.delete('/users/me', auth, async (req, res) => {
 })
 
 router.post('/users/me/avatar',auth, upload.single('avatar'), async (req,res) => {
-    //const user = new User(req.body)
-    // console.log(req.body)
-    req.user.avatar = req.file.buffer
+    const buffer = await sharp(req.file.buffer).resize({width :250 , height : 250}).png().toBuffer()
+    req.user.avatar = buffer
     await req.user.save()
     res.send()
 },(error, req, res,next)=> {
@@ -144,5 +147,18 @@ router.delete('/users/me/avatar' , auth, async (req,res)=> {
      res.send()
 })
 
+router.get('/users/:id/avatar', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id)
+        if(!user || !user.avatar){
+            throw new Error()
+        }
+        res.set('Content-Type', 'image/png')
+        
+        res.send(user.avatar)
+    } catch(e){
+        req.status(404).send()
+    }
+})
 
 module.exports =router;
