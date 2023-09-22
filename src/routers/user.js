@@ -3,6 +3,7 @@ const router = express.Router()
 const User = require('../models/user')
 const auth = require('../middleware/auth')
 const Task = require('../models/task')
+
 const sharp = require('sharp')
 const {sendWelcomeEmail, sendGoodbyeEmail} = require('../emails/account')
 const multer = require('multer')
@@ -125,7 +126,7 @@ router.delete('/users/me', auth, async (req, res) => {
             return res.status(404).send('User not found')
         }
         await Task.deleteMany({ owner : user._id })
-        await User.deleteOne({name : user._id})
+        await User.deleteOne({_id : user._id})
         res.send(req.user)
     }catch(e){
         res.status(500).send(e)

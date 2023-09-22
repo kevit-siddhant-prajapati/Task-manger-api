@@ -6,7 +6,7 @@ const auth = async (req, res, next) => {
         const token = req.header('Authorization')
         const tokenarr = token.split(' ')
         
-        const decoded = jwt.verify(tokenarr[1], 'thisismynewcourse')
+        const decoded = jwt.verify(tokenarr[1], process.env.JWT_SECRET)
         if(!decoded){
             throw Error('do not verify token')
         }
