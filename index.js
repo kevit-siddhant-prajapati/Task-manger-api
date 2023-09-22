@@ -2,7 +2,7 @@ const express = require('express')
 require('./src/db/mongoose')
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 
 const taskRouter = require('./src/routers/task.js')
 const userRouter = require('./src/routers/user.js')
@@ -33,4 +33,5 @@ app.use(taskRouter)
 app.listen(port, ()=>{
     console.log('server is running on port '+ port)
 })
+
 
