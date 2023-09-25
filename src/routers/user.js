@@ -119,7 +119,7 @@ router.patch('/users/me',auth, async (req, res) => {
         if(!req.user){
             return res.status(404).send('This type of user not found')
         }
-        res.send(req.user)
+        res.send(req.user.getPublicProfile())
     }catch(err){
         return res.status(400).send(err)
     }
