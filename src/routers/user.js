@@ -37,7 +37,7 @@ router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
         if(!user){
-            throw Error('Invalid username or password')
+            throw new Error('Invalid username or password')
         }
         const token = await user.generateAuthToken()
         res.send({user: user.getPublicProfile(), token})
@@ -144,7 +144,7 @@ router.post('/users/me/avatar',auth, upload.single('avatar'), async (req,res) =>
     const buffer = await sharp(req.file.buffer).resize({width :250 , height : 250}).png().toBuffer()
     req.user.avatar = buffer
     await req.user.save()
-    res.send()
+    res.send(`${req.file.originalname} is uploaded`)
 },(error, req, res,next)=> {
     res.status(400).send({error : error.message})
 })
