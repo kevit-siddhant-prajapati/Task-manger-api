@@ -48,8 +48,15 @@ router.post('/users/login', async (req, res) => {
 
 router.get('/users', auth ,async (req, res) => {
     try{
-        //const users = await User.find({})
-        res.send(req.user.getPublicProfile())
+        const users = await User.find({})
+        const newuser =users.map(user => {
+            const userObject = user.toObject()
+            delete userObject.password
+            delete userObject.tokens
+            delete userObject.avatar
+            return userObject
+        })
+        res.send(newuser)
     }catch(e){
         res.status(500).send()
     }
